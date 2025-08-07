@@ -173,8 +173,6 @@
       margin-top: 3em;
       animation: fadeSlideIn 1s ease forwards;
     }
-
-    /* Animations */
     @keyframes fadeSlideIn {
       from { opacity: 0; transform: translateY(20px);}
       to { opacity: 1; transform: translateY(0);}
@@ -192,7 +190,7 @@
 <body>
   <header>
     <nav>
-      <h1>FitSmash</h1>
+      <h1>BadCoach</h1>
       <ul>
         <li><a href="#train">Train</a></li>
         <li><a href="#recover">Recover</a></li>
@@ -202,23 +200,20 @@
     </nav>
     <button class="toggle-theme" onclick="toggleTheme()">Toggle Dark Mode</button>
   </header>
-
   <section class="hero">
     <h2>Train Smart. Recover Strong. Play Like a Pro.</h2>
     <p>Your AI fitness coach for badminton performance.</p>
-    <img src="https://source.unsplash.com/1600x900/?badminton,fitness" alt="Badminton Fitness" />
+    <p>Engineered by Nived Neelakandan</p>
+    <img src="https://images.app.goo.gl/ajA7964wYDRAPY2g9" alt="Badminton Fitness" />
   </section>
-
   <section id="train" class="content-section">
     <h2>Training Tips</h2>
     <p>Explore agility drills, power workouts, and movement control for peak badminton performance.</p>
   </section>
-
   <section id="recover" class="content-section">
     <h2>Recovery & Injury Care</h2>
     <p>Learn how to stretch, rehab, and recover with expert-backed guidance for athletes.</p>
   </section>
-
   <section id="chat" class="chat-section">
     <h2>Your Coach</h2>
     <p>Ask anything about training, recovery, mindset, or badminton skills.</p>
@@ -228,19 +223,22 @@
       <button onclick="sendMessage()">Send</button>
     </div>
   </section>
-
   <section id="search" class="content-section">
     <h2>Smart Search</h2>
     <p>Type your badminton question and get results directly from Google:</p>
     <div class="gcse-search"></div>
   </section>
-
   <footer>
-    <p>&copy; 2025 FitSmash. Built for athletes, by AI.</p>
+    <p>&copy; 2025 BadCoach. Built for athletes, by Nived.</p>
   </footer>
-
   <script>
-    const apiKey = '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';
+    const responses = {
+      "injury": "Make sure to ice it for the first 48 hours, rest, and gradually reintroduce movement.",
+      "agility": "Try ladder drills, cone sprints, and one-leg balance exercises.",
+      "recovery": "Sleep, hydration, and gentle stretching are key to recovering fast.",
+      "mindset": "Stay calm under pressure by breathing deeply and visualizing success.",
+      "training": "Train explosively with interval sprints and strength circuits."
+    };
 
     function toggleTheme() {
       const current = document.documentElement.getAttribute("data-theme");
@@ -250,44 +248,28 @@
       );
     }
 
-    async function sendMessage() {
+    function sendMessage() {
       const input = document.getElementById("userInput");
       const chatBox = document.getElementById("chatBox");
       const msg = input.value.trim();
       if (!msg) return;
-
       chatBox.innerHTML += `<div class='chat-msg'><span class='user'>You:</span> ${msg}</div>`;
       input.value = "";
-      chatBox.scrollTop = chatBox.scrollHeight;
 
-      try {
-        const response = await axios.post(
-          'https://api.openai.com/v1/chat/completions',
-          {
-            model: 'gpt-3.5-turbo',
-            messages: [
-              { role: 'system', content: 'You are a motivating badminton fitness coach who speaks kindly and clearly to help the user recover, train, and improve.' },
-              { role: 'user', content: msg }
-            ],
-            max_tokens: 500,
-            temperature: 0.7
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${apiKey}`
-            }
-          }
-        );
-
-        const botReply = response.data.choices[0].message.content;
-        chatBox.innerHTML += `<div class='chat-msg'><span class='coach'>Coach:</span> ${botReply}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      } catch (err) {
-        console.error(err);
-        chatBox.innerHTML += `<div class='chat-msg'><span class='coach'>Coach:</span> Sorry, I couldn't process that right now.</div>`;
+      let reply = "Sorry, I don't know how to help with that. Try asking about training, recovery, or mindset.";
+      for (let keyword in responses) {
+        if (msg.toLowerCase().includes(keyword)) {
+          reply = responses[keyword];
+          break;
+        }
       }
+
+      setTimeout(() => {
+        chatBox.innerHTML += `<div class='chat-msg'><span class='coach'>Coach:</span> ${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
     }
   </script>
 </body>
 </html>
+
