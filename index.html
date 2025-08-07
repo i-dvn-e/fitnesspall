@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Badminton Fitness Coach</title>
+  <script async src="https://cse.google.com/cse.js?cx=c52c396a0f18e442c"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    :root {
+      --bg: #fff;
+      --text: #111;
+      --accent: #007aff;
+    }
+    [data-theme="dark"] {
+      --bg: #111;
+      --text: #f1f1f1;
+      --accent: #0a84ff;
+    }
+    * {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      background-color: var(--bg);
+      padding: 1em 2em;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeSlideIn 1s ease forwards;
+    }
+    nav h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.5em;
+      color: var(--accent);
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5em;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1em;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover {
+      color: var(--accent);
+    }
+    .toggle-theme {
+      cursor: pointer;
+      padding: 0.5em 1em;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .toggle-theme:hover {
+      background-color: #005ecb;
+    }
+    .hero {
+      text-align: center;
+      padding: 4em 2em;
+      background-color: #f5f5f5;
+      animation: fadeSlideIn 1.2s ease forwards;
+    }
+    .hero h2 {
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+    }
+    .hero p {
+      font-size: 1.2em;
+      margin-bottom: 1.5em;
+      color: #555;
+    }
+    .hero img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 2em;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      animation: fadeIn 2s ease forwards;
+    }
+    .content-section, .chat-section {
+      padding: 3em 2em;
+      max-width: 900px;
+      margin: auto;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeSlideUp 1s ease forwards;
+    }
+    #train { animation-delay: 1.4s; }
+    #recover { animation-delay: 1.6s; }
+    #chat { animation-delay: 1.8s; }
+    #search { animation-delay: 2s; }
+    h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .chat-box {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 1em;
+      height: 400px;
+      overflow-y: auto;
+      background: #fafafa;
+      font-size: 1em;
+      line-height: 1.4em;
+    }
+    .chat-input {
+      display: flex;
+      margin-top: 1em;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 0.8em;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 1em;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+    .chat-input input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+    .chat-input button {
+      padding: 0.8em 1.2em;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .chat-input button:hover {
+      background-color: #005ecb;
+    }
+    .chat-msg {
+      margin: 0.5em 0;
+    }
+    .user {
+      font-weight: bold;
+      color: var(--accent);
+    }
+    .coach {
+      font-style: italic;
+      color: #444;
+    }
+    footer {
+      text-align: center;
+      padding: 2em;
+      background-color: #f0f0f0;
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 3em;
+      animation: fadeSlideIn 1s ease forwards;
+    }
+
+    /* Animations */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>FitSmash</h1>
+      <ul>
+        <li><a href="#train">Train</a></li>
+        <li><a href="#recover">Recover</a></li>
+        <li><a href="#chat">Coach Chat</a></li>
+        <li><a href="#search">Smart Search</a></li>
+      </ul>
+    </nav>
+    <button class="toggle-theme" onclick="toggleTheme()">Toggle Dark Mode</button>
+  </header>
+
+  <section class="hero">
+    <h2>Train Smart. Recover Strong. Play Like a Pro.</h2>
+    <p>Your AI fitness coach for badminton performance.</p>
+    <img src="https://source.unsplash.com/1600x900/?badminton,fitness" alt="Badminton Fitness" />
+  </section>
+
+  <section id="train" class="content-section">
+    <h2>Training Tips</h2>
+    <p>Explore agility drills, power workouts, and movement control for peak badminton performance.</p>
+  </section>
+
+  <section id="recover" class="content-section">
+    <h2>Recovery & Injury Care</h2>
+    <p>Learn how to stretch, rehab, and recover with expert-backed guidance for athletes.</p>
+  </section>
+
+  <section id="chat" class="chat-section">
+    <h2>Your Coach</h2>
+    <p>Ask anything about training, recovery, mindset, or badminton skills.</p>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Ask your coach..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </section>
+
+  <section id="search" class="content-section">
+    <h2>Smart Search</h2>
+    <p>Type your badminton question and get results directly from Google:</p>
+    <div class="gcse-search"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 FitSmash. Built for athletes, by AI.</p>
+  </footer>
+
+  <script>
+    const apiKey = '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';
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute(
+        "data-theme",
+        current === "dark" ? "light" : "dark"
+      );
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chatBox = document.getElementById("chatBox");
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      chatBox.innerHTML += `<div class='chat-msg'><span class='user'>You:</span> ${msg}</div>`;
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const response = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
+          {
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: 'You are a motivating badminton fitness coach who speaks kindly and clearly to help the user recover, train, and improve.' },
+              { role: 'user', content: msg }
+            ],
+            max_tokens: 500,
+            temperature: 0.7
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            }
+          }
+        );
+
+        const botReply = response.data.choices[0].message.content;
+        chatBox.innerHTML += `<div class='chat-msg'><span class='coach'>Coach:</span> ${botReply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (err) {
+        console.error(err);
+        chatBox.innerHTML += `<div class='chat-msg'><span class='coach'>Coach:</span> Sorry, I couldn't process that right now.</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
